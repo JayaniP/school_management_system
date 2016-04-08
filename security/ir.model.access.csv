@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_school_admission_student","school.admission.student","school_managemnet_system.model_school_admission","grp_student",1,0,0,0
+"access_school_faculty_faculty","school.faculty.faculty","school_managemnet_system.model_school_faculty","grp_faculty",1,0,0,0
+"access_school_admission_students","school.admission.students","school_managemnet_system.model_school_admission","grp_records",1,1,1,1

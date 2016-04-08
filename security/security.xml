@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="module_category_school_mgmt" model="ir.module.category">
+            <field name="name">School Management</field>
+            <field name="description"></field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="grp_student" model="res.groups">
+            <field name="name">Student</field>
+            <field name="category_id" ref="module_category_school_mgmt"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        
+        <record id="grp_faculty" model="res.groups">
+            <field name="name">Faculty</field>
+            <field name="category_id" ref="module_category_school_mgmt"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        
+        <record id="grp_records" model="res.groups">
+            <field name="name">Students</field>
+            <field name="category_id" ref="module_category_school_mgmt"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        
+
+
+    </data>
+</openerp>

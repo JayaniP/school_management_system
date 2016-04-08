@@ -6,6 +6,8 @@
    'category': 'School Management',
    'depends': ['base', 'project', 'sale'],
    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/school.xml',
         'views/calculator.xml',
         'wizard/wiz_calc_age_view.xml',

@@ -8,6 +8,7 @@ from openerp.osv import osv
 import re
 import time
 
+
 class admission(models.Model):
     _name = "school.admission"
     _rec_name = 'fname'
@@ -16,9 +17,12 @@ class admission(models.Model):
     @api.depends('bdate')
     def calc_age(self):
         if self.bdate:
-            age = (dtime.now()-dtime.strptime (self.bdate, "%Y-%m-%d")).days/365
+            age = (dtime.now()- dtime.strptime 
+                  (self.bdate, "%Y-%m-%d")).days/365
             self.age = age
-    name = fields.Char('Student Reference', required=False, copy=False, readonly=True)
+
+    name = fields.Char('Student Reference', required=False, copy=False,
+                       readonly=True)
     image = fields.Binary('Image')
     fname = fields.Char('First Name')
     mname = fields.Char('Middle Name')
@@ -34,30 +38,44 @@ class admission(models.Model):
     # store = True if you wish to create a field in database
     age = fields.Integer(compute='calc_age', string='Age', store=True)
     appno = fields.Integer('Application No')
-    appdate = fields.Date('Application Date', default=time.strftime("%Y-%m-%d"))
+    appdate = fields.Date('Application Date',
+                          default=time.strftime("%Y-%m-%d"))
     admissiondate = fields.Date('Admission Date')
-    std = fields.Selection([('f', '1st Std'), ('s', '2th Std'), ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'), ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'), ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'), ('twe', '12th Std')], 'Standard')
+    std = fields.Selection([('f', '1st Std'), ('s', '2th Std'),
+            ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'),
+            ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'),
+            ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'),
+            ('twe', '12th Std')], 'Standard')
     street = fields.Text("Address")
-    city = fields.Selection([('p', 'Patan'), ('a', 'Ahmedabad'), ('b', 'Baroda'), ('s', 'Surat'), ('r', 'Rajkot'), ('m', 'Mahesana'), ('g', 'Gandhinagar'),
-                             ('mb', 'Mumbai'), ('bn', 'Banglore'), ('pu', 'Pune'), ('d', 'Delhi'), ('my', 'Mysoor')], 'City')
+    city = fields.Selection([('p', 'Patan'), ('a', 'Ahmedabad'),
+            ('b', 'Baroda'), ('s', 'Surat'), ('r', 'Rajkot'),
+            ('m', 'Mahesana'), ('g', 'Gandhinagar'), ('mb', 'Mumbai'),
+            ('bn', 'Banglore'), ('pu', 'Pune'), ('d', 'Delhi'),
+            ('my', 'Mysoor')], 'City')
     country = fields.Many2one('res.country', 'Country')
     country_code = fields.Char('Country Code', related='country.code')
     # Related fields are not created in database same as compute / function
-    currency_id = fields.Many2one('res.currency', 'Currency', related='country.currency_id')
+    currency_id = fields.Many2one('res.currency', 'Currency',
+                                  related='country.currency_id')
     state = fields.Many2one('res.country.state', 'State')
     zip = fields.Char("Zip")
     active = fields.Boolean('Active', default=True)
     sequence = fields.Integer('Sequence')
-    year = fields.Selection([('fb', '2016'), ('sb', '2017'), ('tb', '2018'), ('fb', '2019'), ('fib', '2020')], 'Year')
-    status = fields.Selection([('details', 'Details'), ('started', 'Started'), ('progress', 'In progress'), ('finished', 'Done')], default='details')
+    year = fields.Selection([('fb', '2016'), ('sb', '2017'), ('tb', '2018'),
+                             ('fb', '2019'), ('fib', '2020')], 'Year')
+    status = fields.Selection([('details', 'Details'), ('started', 'Started'),
+         ('progress', 'In progress'), ('finished', 'Done')], default='details')
 
-    sql_constraints = [('number_uniq', 'unique(contact)', 'Contact number must be unique per Student!'),
-                       ('email_uniq', 'unique(email)', 'Email must be unique per Student!')]
+    sql_constraints = [('number_uniq', 'unique(contact)',
+            'Contact number must be unique per Student!'),
+            ('email_uniq', 'unique(email)',
+             'Email must be unique per Student!')]
 
     @api.constrains('email', 'age', 'contact', 'bdate')
     def check_data(self):
         for res in self:
-            if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", res.email) == None:
+            if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",
+                     res.email) == None:
                 raise ValidationError(_('Enter valid email'))
             if len(str(res.contact)) < 10:
                 raise ValidationError(_('Enter valid contact'))
@@ -102,7 +120,8 @@ class admission(models.Model):
         return lst
 
     @api.model
-    #def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+    #def name_search(self, cr, uid, name, args=None, operator='ilike',
+#                   context=None, limit=100):
     def name_search(self, name, args=None, operator='ilike', limit=100):
         print "\n\n########    ", name, args, operator, limit
         if name:
@@ -111,7 +130,8 @@ class admission(models.Model):
                 students = self.search(args + [('lname', 'ilike', name)])
             print "########    ", students
             return students.name_get()
-        return super(admission, self).name_search(name, args=args, operator=operator, limit=limit)
+        return super(admission, self).name_search(name, args=args,
+                                operator=operator, limit=limit)
 
     @api.onchange('state')
     def change_state(self):
@@ -166,7 +186,8 @@ class admission(models.Model):
 #    @api.v7
 #    def write(self, cr, uid, ids, vals, context=None):
 #      # print "writeeeeeee:::    ", cr, uid, ids, vals
-#       searchid = self.search(cr, uid, [('fname','ilike','jayani')], context=context)
+#       searchid = self.search(cr, uid, [('fname','ilike','jayani')],
+#                        context=context)
 #       br=self.browse(cr, uid, searchid, context = context)
 #       students = self.read(cr, uid,searchid, context = context)
 #       self.recorddel(cr, uid)
@@ -186,16 +207,20 @@ class admission(models.Model):
 #       return super(admission,self)
 
 #    @api.v7
-#    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-#       #res = super(admission, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+#    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+#                  context=None, count=False):
+#       #res = super(admission, self).search(cr, uid, args, offset=offset,
+#                  limit=limit, order=order, context=context, count=count)
 #       ids=self.search(cr, uid, [('fname','=','jayani')],context=context)
 #       print "search", ids
 
 #    @api.v7
-#    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+#    def read(self, cr, user, ids, fields=None, context=None,
+#                 load='_classic_read'):
 #        ids = obj.search(cr, uid, [('fname','=','jayani')], context=context)
 #        print ids
-#        res = super(admission, self).read(cr, user,ids,fields=fields,context=context,load=load)
+#        res = super(admission, self).read(cr, user,ids,fields=fields,
+#               context=context,load=load)
 #        return res
 
 #    @api.v7
@@ -205,7 +230,8 @@ class admission(models.Model):
 
 #    @api.model
 #    def search(self, args, offset=0, limit=None, order=None, count=False):
-#        res = super(admission, self).search(args, offset=offset, limit=limit, order=order, count=count)
+#        res = super(admission, self).search(args, offset=offset, limit=limit,
+#             order=order, count=count)
 #        print "search argssssss", args, res
 #        return res
 
@@ -215,11 +241,15 @@ class admission(models.Model):
 #       # print "selfffffff::    ",self
 #        return super(admission, self).write(vals)
 
+
 class school_event(models.Model):
     _name = "school.event"
 
-    evname = fields.Selection([('p', 'Painintg'), ('d', 'Drama'), ('s', 'Singing'), ('da', 'Dancing'), ('q', 'Quiz'), ('so', 'Solo')], 'Event Name')
-    org = fields.Many2many('school.admission', 'student_event_rel', 'event_id', 'student_id', 'Students')
+    evname = fields.Selection([('p', 'Painintg'), ('d', 'Drama'),
+                ('s', 'Singing'), ('da', 'Dancing'), ('q', 'Quiz'),
+                ('so', 'Solo')], 'Event Name')
+    org = fields.Many2many('school.admission', 'student_event_rel', 'event_id',
+                    'student_id', 'Students')
 
     @api.multi
     def write(self, vals):
@@ -228,6 +258,7 @@ class school_event(models.Model):
         for org in self.org:
             print "selfffffff::    ", org.lname
         return super(school_event, self).write(vals)
+
 
 class faculty(models.Model):
     _name = "school.faculty"
@@ -242,8 +273,10 @@ class faculty(models.Model):
     gender = fields.Selection([('m', 'Male'), ('f', 'Female')], 'Gender')
     bdate = fields.Date("BirthDate")
     street = fields.Text("Address")
-    city = fields.Selection([('p', 'Patan'), ('a', 'Ahmedabad'), ('b', 'Baroda'), ('s', 'Surat'), ('r', 'Rajkot'), ('m', 'Mahesana'), ('g', 'Gandhinagar'),
-                             ('mb', 'Mumbai'), ('bn', 'Banglore'), ('pu', 'Pune'), ('d', 'Delhi'), ('my', 'Mysoor')])
+    city = fields.Selection([('p', 'Patan'), ('a', 'Ahmedabad'),
+            ('b', 'Baroda'), ('s', 'Surat'), ('r', 'Rajkot'),
+            ('m', 'Mahesana'), ('g', 'Gandhinagar'), ('mb', 'Mumbai'),
+        ('bn', 'Banglore'), ('pu', 'Pune'), ('d', 'Delhi'), ('my', 'Mysoor')])
     country = fields.Many2one('res.country', 'Country')
     country_code = fields.Char('Country Code', related='country.code')
     state = fields.Many2one('res.country.state', 'State')
@@ -269,7 +302,8 @@ class faculty(models.Model):
             if not f:
                 f = self.search(args + [('lname', 'ilike', name)])
             return f.name_get()
-        return super(faculty, self).name_search(name, args=args, operator=operator, limit=limit)
+        return super(faculty, self).name_search(name, args=args,
+                        operator=operator, limit=limit)
 
     @api.model
     def create(self, vals):
@@ -280,8 +314,9 @@ class faculty(models.Model):
     @api.multi
     def write(self, vals):
         print "writeeeeeee:::    ", self
-        print "selfff::    ", self.fname, self.lname, self.state, self.country.name
+        print self.fname, self.lname, self.state, self.country.name
         return super(faculty, self).write(vals)
+
 
 class attendence(models.Model):
     _name = "school.attedence"
@@ -305,8 +340,12 @@ class attendence(models.Model):
 class library(models.Model):
     _name = "school.library"
 
-    bname = fields.Selection([('a', 'MathsPuzzles'), ('d', 'EnglishGrammer'), ('e', 'EnglishVocabulary'), ('g', 'GeneralKnowledge'), ('m', 'Magazine'), ('sc', 'Science')], 'Book Name')
-    bauthor = fields.Selection([('a', 'AshokPatel'), ('sc', 'ShaileshGajjar'), ('e', 'ChimnalalMunshi'), ('d', 'Dr.Chatrvedi'), ('m', 'Manan Vyas'), ('g', 'Praafful Vyas')], 'Book Auther')
+    bname = fields.Selection([('a', 'MathsPuzzles'), ('d', 'EnglishGrammer'),
+     ('e', 'EnglishVocabulary'), ('g', 'GeneralKnowledge'), ('m', 'Magazine'),
+        ('sc', 'Science')], 'Book Name')
+    bauthor = fields.Selection([('a', 'AshokPatel'), ('sc', 'ShaileshGajjar'),
+        ('e', 'ChimnalalMunshi'), ('d', 'Dr.Chatrvedi'), ('m', 'Manan Vyas'),
+        ('g', 'Praafful Vyas')], 'Book Auther')
     idate = fields.Date('Issue Date')
     rdate = fields.Date('Return Date')
     des = fields.Text('Book Description')
@@ -317,13 +356,15 @@ class library(models.Model):
         print "\n\nonchangeeeeeee#######    ", bname
         self.bauthor = bname
 
+
 class exam(models.Model):
     _name = "school.exam"
 
     ename = fields.Selection([('i', 'Internal'), ('e', 'External')])
-    subject = fields.Selection([('m', 'Maths'), ('e', 'English'), ('s', 'Science'),
-                                ('p', 'Physics'), ('c', 'Chemistry'), ('b', 'Biology'),
-                                ('sc', 'SocialScience')])
+    subject = fields.Selection([('m', 'Maths'), ('e', 'English'),
+                                ('s', 'Science'), ('p', 'Physics'),
+                                ('c', 'Chemistry'), ('b', 'Biology'),
+                                ('sc', 'SocialScience')], 'Subject')
     stime = fields.Datetime('Exam Start Time')
     endtime = fields.Datetime("Exam End Time")
     student_id = fields.Many2one('school.admission', 'Student')
@@ -350,47 +391,66 @@ class exam(models.Model):
     @api.constrains('stime', 'endtime')
     def check_dates(self):
         if self.stime >= self.endtime:
-                raise ValidationError(_('Exam Start Date Should be less than the Exam End Date!'))
+            raise ValidationError(_('Exam Start Date Should be less'
+                                  'than the Exam End Date!'))
 
 
 class assignment(models.Model):
     _name = "school.assignment"
     _description = 'School Assignment'
-    _order = 'subject desc'# to show the records order by
+    # to show the records order by
+    _order = 'subject desc'
 
-    subject = fields.Selection([('m', 'Maths'), ('e', 'English'), ('s', 'Science'), ('p', 'Physics'), ('c', 'Chemistry'), ('b', 'Biology'), ('sc', 'SocialScience')])
-    std = fields.Selection([('f', '1st Std'), ('s', '2th Std'), ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'), ('six', '6th Std'), ('se', '7th Std'),
-                             ('e', '8th Std'), ('n', '9th Std'),('ten', '10th Std'), ('ele', '11th Std'), ('twe', '12th Std')])
-    div = fields.Selection([('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'), ('e', 'E')])
-    assign = fields.Many2many('school.admission', 'assignment_student_rel', 'assignment_id', 'student_id', 'Assignment')
+    subject = fields.Selection([('m', 'Maths'), ('e', 'English'),
+         ('s', 'Science'), ('p', 'Physics'), ('c', 'Chemistry'),
+         ('b', 'Biology'), ('sc', 'SocialScience')])
+    std = fields.Selection([('f', '1st Std'), ('s', '2th Std'),
+        ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'),
+        ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'),
+        ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'),
+        ('twe', '12th Std')])
+    div = fields.Selection([('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'),
+                             ('e', 'E')])
+    assign = fields.Many2many('school.admission', 'assignment_student_rel',
+                              'assignment_id', 'student_id', 'Assignment')
     idate = fields.Date("Issue Date",)
     rdate = fields.Date("Return Date")
     faculty_id = fields.Many2one('school.faculty', 'Faculty Name')
 #    country = fields.Many2one('res.country', 'Country')
 #    country_code = fields.Char('Country Code', related='country.code')
 #    # Related fields are not created in database same as compute / function
-#    currency_id = fields.Many2one('res.currency', 'Currency', related='country.currency_id')
+#    currency_id = fields.Many2one('res.currency', 'Currency',
+#                    related='country.currency_id')
 
     @api.constrains('idate', 'rdate')
     def check_dates(self):
         if self.idate >= self.rdate:
-            raise ValidationError(_('Issue Date Should be less than the Return Date!' ))
+            raise ValidationError(_('Issue Date Should be less than'
+                        'the Return Date!'))
+
 
 class result(models.Model):
     _name = "school.result"
 
     result_id = fields.Many2one('school.admission', 'Student')
-    div = fields.Selection([('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'), ('e', 'E')])
+    div = fields.Selection([('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'),
+                            ('e', 'E')])
     ename = fields.Selection([('i', 'Internal'), ('e', 'External')])
-    std = fields.Selection([('f', '1st Std'), ('s', '2th Std'), ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'), ('six', '6th Std'), ('se', '7th Std'),
-                             ('e', '8th Std'), ('n', '9th Std'),('ten', '10th Std'),('ele', '11th Std'),('twe', '12th Std')])
-    year = fields.Selection([('fb', '2016'), ('sb', '2017'), ('tb', '2018'), ('fb', '2019'), ('fib', '2020')])
+    std = fields.Selection([('f', '1st Std'), ('s', '2th Std'),
+        ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'),
+        ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'),
+        ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'),
+        ('twe', '12th Std')])
+    year = fields.Selection([('fb', '2016'), ('sb', '2017'), ('tb', '2018'),
+        ('fb', '2019'), ('fib', '2020')])
     totalmarks = fields.Integer('Total Marks')
     obtainmarks = fields.Integer('obtain Marks')
     percentage = fields.Integer('Percentage')
     res = fields.Char('Result')
 
-    _sql_constraints = [('c_obtainmarks', 'CHECK (obtainmarks<totalmarks)', 'Obtain marks is not more than Total marks')]
+    _sql_constraints = [('c_obtainmarks', 'CHECK (obtainmarks<totalmarks)',
+                         'Obtain marks is not more than Total marks')]
+
     #v7
 #    def calc_res(self, cr, uid, ids, context=None):
 #        print "calledddddddddddd    ", ids
@@ -402,13 +462,14 @@ class result(models.Model):
 #               result = 'Pass'
 #            else:
 #               result = 'Fail'
-#            self.write(cr,uid,[res.id],{'percentage': per, 'res': result}, context=context)
+#            self.write(cr,uid,[res.id],{'percentage': per, 'res': result},
+#                                   context=context)
     #v8
     @api.multi
     def calc_res(self):
         print "calledddddddddddd    ", self
         for res in self:
-            per = res.obtainmarks*100/res.totalmarks
+            per = res.obtainmarks * 100 / res.totalmarks
             if per >= 35:
                 result = 'Pass'
             else:
@@ -425,9 +486,11 @@ class result(models.Model):
 #    _name="school.school"
 #    _table="school"
 
+
 class school_result(models.Model):
     _inherit = "school.result"
     grade = fields.Char("Grade")
+
 
 class project(models.Model):
     _name = "school.project"
@@ -437,21 +500,26 @@ class project(models.Model):
 #                 'account.analytic.account': "analytic_account_id",
 #                }
 
-    faculty_id = fields.Many2one('school.faculty', 'Faculty Name', required=True, delegate=True)
+    faculty_id = fields.Many2one('school.faculty', 'Faculty Name',
+                    required=True, delegate=True)
     id = fields.Integer("EnterID")
-    analytic_account_id = fields.Many2one('project.project', 'Contract/Analytic',
-            help="Link this project to an analytic account if you need financial management on projects."
+    analytic_account_id = fields.Many2one('project.project',
+            'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects."
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", auto_join=True, delegate=True)
 
 #    def schedule_tasks(self, cr, uid, ids, context=None):
-#        task= super(project,self).schedule_tasks(self, cr, uid, ids, context=None)
+#        task= super(project,self).schedule_tasks(self, cr, uid, ids,
+#               context=None)
 #        return task
 
 #    def copy_quotation(self, cr, uid, ids, context=None):
-#        amount_val= super(project,self).copy_quotation(self, cr, uid, ids, context=None)
+#        amount_val= super(project,self).copy_quotation(self, cr, uid, ids,
+#                 context=None)
 #        print "#called"
 #        return amount_val
+
+
 class calender_view(models.Model):
     _name = 'calender.view'
 
