@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="student_detail">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                        <div class="back_ground"><p>Student Detail</p></div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Email</th>
+                                        <th>Gender</th>
+                                        <th>Contact</th>
+                                        <th>City</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span t-field="o.fname"/></td>
+                                        <td><span t-field="o.email"/></td>
+                                        <td><span t-field="o.gender"/></td>
+                                        <td><span t-field="o.contact"/></td>
+                                        <td><span t-field="o.city"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Admission Date</th>
+                                        <th>Standard</th>
+                                        <th>Birthdate</th>
+                                        <th>year</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span t-field="o.admissiondate"/></td>
+                                        <td><span t-field="o.std"/></td>
+                                        <td><span t-field="o.bdate"/></td>
+                                        <td><span t-field="o.year"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t> 
+            </t>
+        </template>
+    </data>
+</openerp>

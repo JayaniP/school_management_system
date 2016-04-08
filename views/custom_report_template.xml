@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">    
+                        <h1 align="center">Student Marksheet</h1>
+                        <img src="views/rose.jpg" style="width:100px;height:100px;"></img>
+                        <B>Student Name:</B>
+                        <span t-field="o.result_id"/><br/>
+                        <B>Standard:</B>
+                        <span t-field="o.std"/><br/>
+                        <B>Division:</B>
+                        <span t-field="o.div"/>
+                        <br/><br/>
+                        <span t-esc="hello_world()"/>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <B><th>Exam Type</th></B>
+                                    <B><th>Total Marks</th></B>
+                                    <B><th>Obtain Marks</th></B>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span t-field="o.ename"/></td>
+                                    <td><span t-field="o.totalmarks"/></td>
+                                    <td><span t-field="o.obtainmarks"/></td>
+                                </tr>
+                            </tbody>
+                        </table> 
+                    <br/><br/>
+                    <h2>Result Summary</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <B><th>Paasing Year</th></B>
+                                <B><th>Percentage</th></B>
+                                <B><th>Result</th></B>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span t-field="o.year"/></td>
+                                <td><span t-field="o.percentage"/></td>
+                                <td><span t-field="o.res"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+     </template>
+  </data>
+</openerp>

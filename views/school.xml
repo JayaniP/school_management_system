@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_school_root" name="SchoolSystem"/>
+
+        <menuitem id="menu_admission_main" name="Admission" parent="menu_school_root"/>
+        <menuitem id="menu_student_main" name="Student" parent="menu_school_root"/>
+        <menuitem id="menu_faculty_main" name="Faculty" parent="menu_school_root"/>
+        <menuitem id="menu_attedence_main" name="Attendence" parent="menu_school_root"/>
+        <menuitem id="menu_event_main" name="Event" parent="menu_school_root"/>
+        <menuitem id="menu_library_main" name="Library" parent="menu_school_root"/>
+        <menuitem id="menu_result_main" name="Result" parent="menu_school_root"/>
+
+       <!-- Admission View -->
+        <record id="admission_tree" model="ir.ui.view">
+            <field name="name">Admission.tree</field>
+            <field name="model">school.admission</field>
+            <field name="arch" type="xml">
+                <tree string="Admission">
+                    <field name="name"/>
+                    <field name="fname"/>
+                    <field name="mname" />
+                    <field name="lname" />
+                    <field name="gender"/>
+                    <field name="bdate"/>
+                    <field name="contact"/>
+                    <field name="email"/>
+                    <field name="active"/>
+                    <field name="appdate"/>
+                    <field name="admissiondate"/>
+               </tree>
+            </field>
+        </record>
+
+        <record id="admission_form" model="ir.ui.view">
+            <field name="name">Admission.form</field>
+            <field name="model">school.admission</field>
+            <field name="arch" type="xml">
+            <form string="Admission">
+                <header>
+                    <button string="Action"  name="%(action_event_id)d" type="action" />
+                    <button string="Set to Details" type="object" name="details_progressbar" attrs="{'invisible': [('status', '=', 'details')]}"/>
+                    <button string="Set to Started" type="object" name="started_progressbar" class="oe_highlight" attrs="{'invisible': [('status','!=','details')]}"/>
+                    <button string="In Progress" type="object" name="progress_progressbar" attrs="{'invisible': [('status','=','progress')]}"/>
+                    <button string="Done" type="object" name="done_progressbar" attrs="{'invisible': [('status','=','finished')]}"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <separator string="Student"/>
+                    <field name="image" widget="image" class="oe_avatar oe_left"/>
+                    <field name="name"/>
+                    <group col="4">
+                        <field name="fname" required="True"/> 
+                        <field name="mname" />
+                        <field name="lname" />
+                    </group>
+                    <notebook>
+                        <page string="Basic Information">
+                            <group col="4">
+                                <field name="gender"/>
+                                <field name="bdate"/>
+                                <field name="age" attrs="{'invisible':[('gender','=','f')]}"/>
+                                <field name="contact"/>
+                                <field name="sequence"/>
+                            </group>
+                        </page>
+                        <page string="Contact Information">
+                            <group col="4">
+                                <field name="email"/>
+                                <field name="street" placeholder="Write address here..."/>
+                                <field name="city" />
+                                <field name="zip"/>
+                                <field name="state"/>
+                                <field name="country"/>
+                                <field name="country_code"/>
+                                <field name="currency_id"/>
+                                <field name="active"/>
+                                <field name="sequence"/>
+                            </group>
+                        </page>
+                        <page string="Admission Information">
+                            <group col="4">
+                                <field name="appno" />
+                                <field name="appdate"/>
+                                <field name="admissiondate"/>
+                                <field name="batch"/>
+                                <field name="year"/>
+                                <field name="std"/>
+                            </group>
+                        </page>
+                    </notebook>
+                        <group col="4">
+                            <button name="create_data" string="Create Data" type="object" />
+                            <button name="write_data" string="Write Data" type="object" />
+                            <button name="calc_del" string="Delete Data" type="object" />
+                        </group> 
+                        <group col="2">
+                            <button name="search_data" string="Search Data" type="object" />
+                            <button name="read_data" string="Read Data" type="object" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="gender_graph" model="ir.ui.view">
+            <field name="name">gender.graph</field>
+            <field name="model">school.admission</field>
+            <field name="arch" type="xml">
+                <graph string="By Date" type="bar">
+                    <field name="gender"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_admission_id" model="ir.actions.act_window">
+            <field name="name">Admission</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">school.admission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+        </record>
+
+        <menuitem id="addmission" name="Admission" parent="menu_admission_main" action="action_admission_id"/> 
+
+        <!-- Search View -->
+        <record id="admission_search" model="ir.ui.view">
+            <field name="name">view_account_filter</field>
+            <field name="model">school.admission</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Students Information" >
+                    <field name="fname"/>
+                    <field name="gender"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Gender" context="{'group_by':'gender'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Student form View -->
+        <record id="student_form" model="ir.ui.view">
+            <field name="name">student_form</field>
+            <field name="model">school.admission</field>
+            <field name="arch" type="xml">
+                <form string="Studs">
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar oe_left"/>
+                        <group col="4">
+                            <field name="fname"/>
+                            <field name="mname"/>
+                            <field name="lname"/>
+                            <field name="gender"/>
+                            <field name="bdate"/>
+                            <field name="contact"/>
+                            <field name="email"/>
+                            <field name="street" placeholder="Write address here..."/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                            <field name="state"/>
+                            <field name="country"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_student_id" model="ir.actions.act_window">
+            <field name="name">Student</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">school.admission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_student" name="Student" parent="menu_student_main" action="action_student_id"/>
+
+        <!-- Faculty View -->
+        <record id="faculty_form" model="ir.ui.view">
+            <field name="name">faculty_form</field>
+            <field name="model">school.faculty</field>
+            <field name="arch" type="xml">
+                <form string="Faculty">
+                    <sheet>
+                        <separator string="Faculty Info"/>
+                        <field name="image" widget="image" class="oe_avatar oe_left"/>
+                        <group col="6">
+                            <field name="fname" required="True"/>
+                            <field name="mname" required="True"/>
+                            <field name="lname" required="True"/>
+                            <field name="gender"/>
+                            <field name="bdate"/>
+                            <field name="contact"/>
+                        </group>
+                        <group col="4">
+                            <field name="email"/>
+                            <field name="street" placeholder="Write address here..."/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                            <field name="state"/>
+                            <field name="country"/>
+                            <field name="country_code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="faculty_tree" model="ir.ui.view">
+            <field name="name">Faculty_tree</field>
+            <field name="model">school.faculty</field>
+            <field name="arch" type="xml">
+                <tree string="Faculty">
+                    <field name="fname"/>
+                    <field name="mname"/>
+                    <field name="lname"/>
+                    <field name="gender"/>
+                    <field name="contact"/>
+                    <field name="email"/>
+                    <field name="city"/>
+                </tree>
+            </field>
+        </record> 
+
+        <record id="action_faculty_id" model="ir.actions.act_window">
+            <field name="name">Faculty</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">school.faculty</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="factuly" name="Faculty" parent="menu_faculty_main" action="action_faculty_id"/>
+
+        <!-- Attedence View -->
+        <record id="attedence_form" model="ir.ui.view">
+            <field name="name">attedence_form</field>
+            <field name="model">school.attedence</field>
+            <field name="arch" type="xml">
+                <form string="Attedence">
+                    <sheet>
+                        <separator string="Attedence Info"/>
+                        <group>
+                            <field name="date"/>
+                            <field name="s"/>
+                        </group>
+                    </sheet>
+                </form>    
+            </field>
+        </record>
+
+        <record id="action_attedence_id" model="ir.actions.act_window">
+            <field name="name">Attedence</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">school.attedence</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="attedence" name="Attedence" parent="menu_attedence_main" action="action_attedence_id"/>
+
+        <!-- Exam View -->
+        <record id="exam_form" model="ir.ui.view">
+            <field name="name">exam_form</field>
+            <field name="model">school.exam</field>
+            <field name="arch" type="xml">
+                <form string="Exam">
+                    <header> 
+                        <button type="object" string="Show Result" name="calc_result"></button>
+                    </header>
+                    <sheet>
+                        <separator string="Student Exam"/>
+                        <group col="4">
+                            <field name="ename"/>
+                            <field name="student_id"/>
+                            <field name="subject"/>
+                            <field name="stime"/>
+                            <field name="endtime"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record> 
+
+        <record id="action_exam_id" model="ir.actions.act_window">
+            <field name="name">Exam</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">school.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="exam" name="Exam" parent="menu_student_main" action="action_exam_id"/>
+
+        <!-- Assignment View -->
+        <record id="assignment_form" model="ir.ui.view">
+            <field name="name">assignment_form</field>
+            <field name="model">school.assignment</field>
+            <field name="arch" type="xml">
+                <form string="Assignment">
+                    <sheet>
+                        <separator string="Student Assignment"/>
+                        <group col="4">
+                            <field name="subject"/>
+                            <field name="std"/>
+                            <field name="div"/>
+                            <field name="faculty_id"/>
+                            <field name="idate"/>
+                            <field name="rdate"/>
+                        </group>
+                        <separator string="Students who will take part in Event"/>
+                        <field name="assign"/>
+                    </sheet>
+                </form>
+            </field>
+        </record> 
+
+        <record id="action_assignment_id" model="ir.actions.act_window">
+            <field name="name">Assignment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">school.assignment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <menuitem id="assignment" name="Assignment" parent="menu_student_main" action="action_assignment_id"/>
+
+        <!-- School Event View -->
+        <record id="event_form" model="ir.ui.view">
+            <field name="name">event_form</field>
+            <field name="model">school.event</field>
+            <field name="arch" type="xml">
+                <form string="Events">
+                    <sheet>
+                        <group>
+                            <field name="evname"/>
+                        </group>
+                        <separator string="Students who will take part in Event"/>
+                        <field name="org"/>
+                    </sheet>
+                </form>
+            </field>
+        </record> 
+
+       <record id="action_event_id" model="ir.actions.act_window">
+           <field name="name">Event</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">school.event</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">form</field>
+       </record>
+
+       <menuitem id="menu_event" name="Event" parent="menu_event_main" action="action_event_id"/>
+
+       <!-- Book View -->
+       <record id="book_form" model="ir.ui.view">
+           <field name="name">Book_form</field>
+           <field name="model">school.library</field>
+           <field name="arch" type="xml">
+               <form string="Books">
+                   <sheet>
+                       <separator string="Book Submission"/>
+                       <group col="4">
+                           <field name="bname"/>
+                           <field name="bauthor"/>
+                           <field name="idate"/>
+                           <field name="rdate"/>
+                       </group>
+                       <group>
+                           <field name="des" placeholder="Write about Book"></field>
+                       </group>
+                   </sheet>
+               </form>
+           </field>
+       </record> 
+
+       <record id="action_book_id" model="ir.actions.act_window">
+           <field name="name">Book</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">school.library</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">form</field>
+       </record> 
+
+       <menuitem id="menu_book" name="Book Submission" parent="menu_library_main" action="action_book_id"/>
+
+       <!-- Result View -->
+       <record id="result_form" model="ir.ui.view">
+           <field name="name">result_form</field>
+           <field name="model">school.result</field>
+           <field name="arch" type="xml">
+               <form string="Result">
+                   <header>
+                       <button name="calc_res" string="Calculate Result" type="object" class="oe_highlight"/>
+                       <button name="calc_del" string="Delete" type="object" class="oe_highlight"/>
+                   </header>
+                   <sheet>
+                       <separator string="Result"/>
+                       <group col="4">
+                           <field name="result_id"/>
+                           <field name="std"/>
+                           <field name="ename"/>
+                           <field name="div"/>
+                           <field name="year"/>
+                       </group>
+                       <separator string="Result Summary"/>
+                       <form string="Student">
+                           <sheet>
+                               <group col="4">
+                                   <field name="totalmarks"/>
+                                   <field name="obtainmarks"/>
+                                   <field name="percentage"/>
+                                   <field name="res"/>
+                               </group>
+                           </sheet>
+                       </form>
+                   </sheet>
+               </form>
+           </field>
+       </record> 
+
+       <record id="action_result_id" model="ir.actions.act_window">
+           <field name="name">Result</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">school.result</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+       </record> 
+
+       <menuitem id="menu_result" name="Result" parent="menu_result_main" action="action_result_id"/>
+
+       <!-- Inherited View -->
+       <record model="ir.ui.view" id="result_form_inherit">
+           <field name="name">result.form.inherit</field>
+           <field name="model">school.result</field>
+           <field name="inherit_id" ref="school_managemnet_system.result_form"/>
+           <field name="arch" type="xml">
+               <xpath expr="//form[@string='Result']/sheet/form[@string='Student']/sheet/group/field[@name='res']" position="after">
+                   <field name="grade"/>
+               </xpath>
+           </field>
+       </record>
+ 
+       <!-- _inherits View -->
+       <record id="form" model="ir.ui.view">
+           <field name="name">form</field>
+           <field name="model">school.project</field>
+           <field name="arch" type="xml">
+               <form string="FormView">
+                   <sheet>
+                       <group>
+                           <field name="faculty_id"/>
+                           <field name="id"/>
+                           <field name="analytic_account_id"/>
+                       </group>
+                   </sheet>
+               </form>
+           </field>
+       </record>
+
+       <record id="action" model="ir.actions.act_window">
+           <field name="name">view</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">school.project</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">form</field>
+       </record> 
+
+       <menuitem id="menu" name="View" parent="menu_result_main" action="action"/>
+
+       <!-- view Calender, Graph View -->     
+       <record id="view_calendar" model="ir.ui.view">
+           <field name="name">view.calendar</field>
+           <field name="model">calender.view</field>
+           <field name="arch" type="xml">
+               <calendar string="Test Schedule" date_start="from_datetime" date_stop="to_datetime" color="user_id"
+                        avatar_model="res.users" display="[name]" quick_add="False" mode="month">
+                   <field name="name"/>
+                   <field name="user_id"/>
+                   <field name="from_datetime"/>
+                   <field name="to_datetime"/>
+               </calendar>
+           </field>
+       </record>
+
+       <record id="country_graph_id" model="ir.ui.view">
+           <field name="name">country.graph</field>
+           <field name="model">calender.view</field>
+           <field name="arch" type="xml">
+               <graph string="By Date" type="bar">
+                   <field name="from_datetime"/>
+                   <field name="to_datetime"/>
+               </graph>
+           </field>
+       </record>
+
+       <record id="action_calender_id" model="ir.actions.act_window">
+           <field name="name">calender</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">calender.view</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">graph,calendar,tree,form</field>
+       </record> 
+
+       <menuitem id="menu_calender" name="Calender View" parent="menu_result_main" action="action_calender_id"/>
+    </data>
+</openerp>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wiz_calc_age_form" model="ir.ui.view">
+            <field name="name">wiz.calc.age.form</field>
+            <field name="model">wiz.calc.age</field>
+            <field name="arch" type="xml">
+                <form string="Calculate Age">
+                    <group col="6">
+                        <field name="fname"/> 
+                        <field name="bdate"/>
+                        <field name="country"/>
+                    </group>
+                    <footer>
+                        <button name="calc_age" string="OK" type="object" class="oe_highlight"/>
+                        <button name="calc_country" string="Update Country" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wiz_calc_age" model="ir.actions.act_window">
+            <field name="name">Calculate Age</field>
+            <field name="res_model">wiz.calc.age</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+       </record>
+
+       <menuitem
+            action="action_wiz_calc_age"
+            id="menu_wiz_calc_age"
+            parent="menu_admission_main"/>
+    </data>
+</openerp>

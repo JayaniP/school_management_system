@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wiz_calc_age_form" model="ir.ui.view">
+            <field name="name">wiz.active.form</field>
+            <field name="model">wiz.show.active</field>
+            <field name="arch" type="xml">
+                <form string="Active">
+                    <footer>
+                        <button name="show_active" string="OK" type="object" class="oe_highlight"/>
+                                or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_show_active" model="ir.actions.act_window">
+            <field name="name">Active Record</field>
+            <field name="res_model">wiz.show.active</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+       </record>
+
+        <menuitem
+            action="action_show_active"
+            id="menu_active"
+            parent="menu_admission_main"/>
+    </data>
+</openerp>

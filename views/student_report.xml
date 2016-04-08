@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <report id="school_students"
+                model="school.admission"
+                string="Student Details"
+                report_type="qweb-pdf"
+                name="school_managemnet_system.student_detail" />
+    </data>
+</openerp>

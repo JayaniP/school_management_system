@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_cal_root" name="Cal"/>
+        
+        <menuitem id="menu_calculation_main" name="Calculator" parent="menu_cal_root"/>  
+          
+        <record id="cal_form" model="ir.ui.view">
+            <field name="name">cal_form</field>
+            <field name="model">calculator.cal</field>
+            <field name="arch" type="xml">
+               <form string="Cals">
+                   <sheet min-width= "50%">
+                       
+                     
+                       <group col="4">
+                            <button name="1" string="1" type="object" context="{'value': '1'}"/>
+                            <button name="2" string="2" type="object" context="{'value': '2'}"/>
+                            <button name="calc_res" string="3" type="object" context="{'value': '3'}"/>
+                            <button name="calc_res" string="/" type="object" context="{'value': '/'}"/>
+                        </group>   
+                        
+                        
+                        <group col="4">
+                            <button name="calc_res" string="4" type="object" context="{'value': '4'}"/>
+                            <button name="calc_res" string="5" type="object" context="{'value': '5'}"/>
+                            <button name="calc_res" string="6" type="object" context="{'value': '6'}"/>
+                            <button name="calc_res" string="*" type="object" context="{'value': '*'}"/>
+                        </group> 
+                       
+                         <group col="4">
+                            <button name="calc_res" string="7" type="object" context="{'value': '7'}"/>
+                            <button name="calc_res" string="8" type="object" context="{'value': '8'}"/>
+                            <button name="calc_res" string="9" type="object" context="{'value': '9'}"/>
+                            <button name="calc_res" string="-" type="object" context="{'value': '-'}"/>
+                        </group>
+                        
+                        <group col="4">
+                            <button name="calc_res" string="." type="object" context="{'value': '.'}"/>
+                            <button name="calc_res" string="0" type="object" context="{'value': '0'}"/>
+                            <button name="calc_res" string="=" type="object" context="{'value': '='}"/>
+                            <button name="calc_res" string="+" type="object" context="{'value': '+'}"/>
+                        </group>                         
+                         
+                         <separator string="Calculate:"/>                      
+                        <group col="4">
+                             <button name="" string="Calculate" type="object"/>
+                             <field name="res"/>                                            `
+                        </group>                    
+                        
+                   </sheet>
+               </form>
+            </field>
+      </record>
+            
+      <record id="action_cal_id" model="ir.actions.act_window">
+            <field name="name">calculator</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calculator.cal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+       </record>
+
+       <menuitem id="menu_cal" name="Calculate" parent="menu_calculation_main" action="action_cal_id"/>   
+    </data>
+</openerp>
