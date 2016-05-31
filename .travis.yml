@@ -42,8 +42,9 @@ env:
 #  - TESTS="1.0" ODOO_REPO="OCA/OCB" UNIT_TEST="1"
 
 install:
-  - git clone --depth=1 https://github.com/Jayani/school_management_system.git ${HOME}/school_management_system
-  - export PATH=${HOME}/school_management_system/travis:${PATH}
+  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - travis_install_nightl
 
 script:
   - travis_run_tests
