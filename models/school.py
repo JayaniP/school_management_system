@@ -123,7 +123,6 @@ class admission(models.Model):
     #def name_search(self, cr, uid, name, args=None, operator='ilike',
 #                   context=None, limit=100):
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        print "\n\n########    ", name, args, operator, limit
         if name:
             students = self.search(args + [('lname', '=', name)])
             if not students:
@@ -146,7 +145,6 @@ class admission(models.Model):
 #            self.country = False
 
 #    def create(self, cr, uid, vals, context=None):
-#        print "vals:::::    ", vals
 #        return super(admission, self).create(cr, uid, vals)
 #v8
     @api.multi
@@ -178,16 +176,11 @@ class admission(models.Model):
 #v7
 #    @api.v7
 #    def write(self, cr, uid, ids, vals, context=None):
-#      # print "writeeeeeee:::    ", cr, uid, ids, vals
 #       searchid = self.search(cr, uid, [('fname','ilike','jayani')],
 #                        context=context)
 #       br=self.browse(cr, uid, searchid, context = context)
 #       students = self.read(cr, uid,searchid, context = context)
 #       self.recorddel(cr, uid)
-#       print "Search:",searchid
-#       print "Read:",br.contact
-
-#
 #       return super(admission, self).write(cr, uid, ids, vals)
 
 #    def recorddel(self,cr, uid):
@@ -196,7 +189,6 @@ class admission(models.Model):
 #    @api.v7
 #    def browse(self, cr, uid, ids,context=None):
 #       students = self.browse(cr, uid, lname, context = context)
-#       print students
 #       return super(admission,self)
 
 #    @api.v7
@@ -205,13 +197,11 @@ class admission(models.Model):
 #       #res = super(admission, self).search(cr, uid, args, offset=offset,
 #                  limit=limit, order=order, context=context, count=count)
 #       ids=self.search(cr, uid, [('fname','=','jayani')],context=context)
-#       print "search", ids
 
 #    @api.v7
 #    def read(self, cr, user, ids, fields=None, context=None,
 #                 load='_classic_read'):
 #        ids = obj.search(cr, uid, [('fname','=','jayani')], context=context)
-#        print ids
 #        res = super(admission, self).read(cr, user,ids,fields=fields,
 #               context=context,load=load)
 #        return res
@@ -225,13 +215,10 @@ class admission(models.Model):
 #    def search(self, args, offset=0, limit=None, order=None, count=False):
 #        res = super(admission, self).search(args, offset=offset, limit=limit,
 #             order=order, count=count)
-#        print "search argssssss", args, res
 #        return res
 
 #    @api.multi
 #    def write(self, vals):
-#       # print "writeeeeeee:::    ",vals
-#       # print "selfffffff::    ",self
 #        return super(admission, self).write(vals)
 
 
@@ -434,10 +421,8 @@ class result(models.Model):
 
     #v7
 #    def calc_res(self, cr, uid, ids, context=None):
-#        print "calledddddddddddd    ", ids
 #        for res in self.browse(cr, uid, ids, context=context):
 #            per = res.obtainmarks * 100 / res.totalmarks
-#            print per
 #            result =''
 #            if per >= 35:
 #               result = 'Pass'
@@ -496,7 +481,6 @@ class project(models.Model):
 #    def copy_quotation(self, cr, uid, ids, context=None):
 #        amount_val= super(project,self).copy_quotation(self, cr, uid, ids,
 #                 context=None)
-#        print "#called"
 #        return amount_val
 
 
