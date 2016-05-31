@@ -1,2 +1,3 @@
 # -*- coding: utf-8 -*-
-import wiz_calc_age, wiz_active 
+import school_management_system.wiz_calc_age
+import school_management_system.wiz_active 

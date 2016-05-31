@@ -128,7 +128,6 @@ class admission(models.Model):
             students = self.search(args + [('lname', '=', name)])
             if not students:
                 students = self.search(args + [('lname', 'ilike', name)])
-            print "########    ", students
             return students.name_get()
         return super(admission, self).name_search(name, args=args,
                                 operator=operator, limit=limit)
@@ -139,7 +138,6 @@ class admission(models.Model):
         This will fill the country from selected state.
         """
         state = self.state
-        print "\n\nonchangeeeeeee#######    ", state
         self.country = state and state.country_id and state.country_id.id or False
 #        if state and state.country_id:
 #            # Fill country from selected state
@@ -156,8 +154,6 @@ class admission(models.Model):
         for res in self:
             if vals.get('name', '/') == '/':
                 vals['name'] = self.env['ir.sequence'].get('school.admission')
-                print vals['name']
-            print res.create(vals)
 
     @api.multi
     def write_data(self, vals):
@@ -173,14 +169,11 @@ class admission(models.Model):
     def search_data(self):
         for res in self:
             sdata = res.search([('lname', 'ilike', 'patel')])
-            # br = res.browse(sdata)
-            print sdata
 
     @api.multi
     def read_data(self):
         for res in self:
             rdata = res.read(['fname', 'lname', 'mname', 'contact', 'email'])
-            print rdata
 
 #v7
 #    @api.v7
@@ -253,11 +246,8 @@ class school_event(models.Model):
 
     @api.multi
     def write(self, vals):
-        print "writeeeeeee:::    ", self, vals
-
         for org in self.org:
-            print "selfffffff::    ", org.lname
-        return super(school_event, self).write(vals)
+            return super(school_event, self).write(vals)
 
 
 class faculty(models.Model):
@@ -294,11 +284,8 @@ class faculty(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        print name
         if name:
-            print 'hj'
             f = self.search(args + [('lname', '=', name)])
-            print f
             if not f:
                 f = self.search(args + [('lname', 'ilike', name)])
             return f.name_get()
@@ -307,14 +294,11 @@ class faculty(models.Model):
 
     @api.model
     def create(self, vals):
-        print "vals:::::    ", vals, self
         vals.update({'mname': vals.get('mname', '') + ' - SCS'})
         return super(faculty, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        print "writeeeeeee:::    ", self
-        print self.fname, self.lname, self.state, self.country.name
         return super(faculty, self).write(vals)
 
 
@@ -326,14 +310,12 @@ class attendence(models.Model):
 
     @api.multi
     def write(self, vals):
-        print "writeeeeeee:::    ", self, vals
         s = vals.get('s')
         if not s:
             s = []
         s.append([0, 0, {'fname': '11', 'lname': '22', 'mname': '333'}])
         vals.update({'s': s})
         res = super(attendence, self).write(vals)
-        print "selfff::    ", self.s
         return res
 
 
@@ -353,7 +335,6 @@ class library(models.Model):
     @api.onchange('bname')
     def change_book(self):
         bname = self.bname
-        print "\n\nonchangeeeeeee#######    ", bname
         self.bauthor = bname
 
 
@@ -467,7 +448,6 @@ class result(models.Model):
     #v8
     @api.multi
     def calc_res(self):
-        print "calledddddddddddd    ", self
         for res in self:
             per = res.obtainmarks * 100 / res.totalmarks
             if per >= 35:

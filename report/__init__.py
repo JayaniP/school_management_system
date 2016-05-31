@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import parser
+import school_management_system.parser

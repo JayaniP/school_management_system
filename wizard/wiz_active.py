@@ -9,6 +9,5 @@ class wiz_show_active(models.TransientModel):
         stud_obj = self.env['school.admission']
         for res in self:
             sdata = stud_obj.search([('active', '=', False)])
-            print sdata
             for i in sdata:
                 i.active = [('active', '=', True)]

@@ -21,11 +21,9 @@ class wiz_calc_age(models.TransientModel):
         stud_obj = self.env['school.admission']
         for res in self:
             sdata = stud_obj.search([('fname', 'ilike', res.fname)])
-            print sdata
             for i in sdata:
                 if i.bdate:
                     age = (dtime.now() - dtime.strptime(i.bdate, "%Y-%m-%d")).days/365
-                    print i.bdate
                     i.age = age
 
     @api.multi
@@ -33,6 +31,5 @@ class wiz_calc_age(models.TransientModel):
         stud = self.env['school.admission']
         for res in self:
             sdata = stud.search([('fname', 'ilike', res.fname)])
-            print sdata
             for i in sdata:
                 i.country = res.country.id

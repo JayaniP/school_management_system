@@ -19,4 +19,4 @@ class cal(models.Model):
     @api.multi
     def calc_res(self):
         r = self._context.get('value')
-        print r
+

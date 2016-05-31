@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-import school
-import calculator
+import school_management_system.school
+import school_management_system.calculator
