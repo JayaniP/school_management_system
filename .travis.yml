@@ -16,6 +16,10 @@ addons:
     packages:
       - expect-dev  # provides unbuffer utility
       - python-lxml  # because pip installation is slow
+      - python-simplejson
+      - python-serial
+      
+sudo: True
 
 virtualenv:
   system_site_packages: true
@@ -23,31 +27,27 @@ virtualenv:
 env:
 
   global:
-  - VERSION="9.0" TESTS="1" LINT_CHECK="0"
+  - VERSION="8.0" ODOO_REPO="odoo/odoo" UNIT_TEST="0" TESTS="0" LINT_CHECK="0"
 
   matrix:
-  - INSTANCE_ALIVE="1" INCLUDE="broken_module" SERVER_EXPECTED_ERRORS="2"  # test errors are detected
-  - EXCLUDE="broken_module,broken_lint,broken_no_access_rule" OPTIONS="--log-level=debug" INSTALL_OPTIONS="--log-level=info" RUN_COMMAND_MQT_CREATE_FOLDER='mkdir /tmp/tests'
-  - INCLUDE="test_module,second_module" UNIT_TEST="1"
-  - VERSION="7.0" INCLUDE="test_module,second_module" ODOO_REPO="OCA/OCB"  # ODOO_REPO usage example
-  - VERSION="6.1" INCLUDE="test_module,second_module"
-  - LINT_CHECK="1" TESTS="0" PYLINT_EXPECTED_ERRORS="14" TRAVIS_PULL_REQUEST="false" # Use main pylint config file
-  - VERSION=master EXCLUDE="broken_no_access_rule" LINT_CHECK="1" TESTS="0" PYLINT_EXPECTED_ERRORS="19" TRAVIS_PULL_REQUEST="true"  # Use PR pylint config file
-  - VERSION="7.0" LINT_CHECK="1" TESTS="0" PYLINT_EXPECTED_ERRORS="19" TRAVIS_PULL_REQUEST="true"  # To check pylint_conf of PR's with old api
-  - VERSION="" LINT_CHECK="1" TESTS="0" PYLINT_EXPECTED_ERRORS="14" TRAVIS_PULL_REQUEST="false"  # To check VERSION empty or unset case.
-  - INCLUDE="broken_no_access_rule" SERVER_EXPECTED_ERRORS="1"  # test errors are detected
+  - LINT_CHECK="1"
+  - TRANSIFEX="0"
+  - TESTS="1" ODOO_REPO="odoo/odoo"
+  - TESTS="1" ODOO_REPO="OCA/OCB"
+# either use the two lines above or the two below. Don't change the default if
+# it's not necessary (it is only necessary if modules in your repository can't
+# be installed in the same database. And you get a huge speed penalty in your
+# tests)
+#  - TESTS="1.0" ODOO_REPO="odoo/odoo" UNIT_TEST="1"
+#  - TESTS="1.0" ODOO_REPO="OCA/OCB" UNIT_TEST="1"
 
 install:
-  - cp -r ../school_management_system/ $HOME
-  - cp -r tests/test_repo/* ./
-  - export PATH=$HOME/school_management_system/travis:$PATH
-  - travis_install_nightly 8.0 # only used if VERSION not set in env
-  - pip install coveralls  # Force install coveralls in all cases of MQT for self_test script.
-  - git --git-dir=${TRAVIS_BUILD_DIR}/.git add --all  # All modules moved are modules changed to test PR changes
+  - git clone --depth=1 https://github.com/Jayani/school_management_system.git ${HOME}/school_management_system
+  - export PATH=${HOME}/school_management_system/travis:${PATH}
+  - travis_install_nightly
 
 script:
-  - coverage run --append ./travis/travis_run_tests 8.0  # only used if VERSION not set in env
-  - coverage run --append ./travis/self_tests
+  - travis_run_tests
 
 after_success:
-  - TESTS="1" LINT_CHECK="0" travis_after_tests_success
+  - travis_after_tests_success
