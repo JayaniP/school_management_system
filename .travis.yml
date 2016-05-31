@@ -44,7 +44,6 @@ env:
 install:
   - git clone --depth=1 https://github.com/Jayani/school_management_system.git ${HOME}/school_management_system
   - export PATH=${HOME}/school_management_system/travis:${PATH}
-  - travis_install_nightly
 
 script:
   - travis_run_tests
