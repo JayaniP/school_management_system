@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-import school
-import calculator
+from . import school
+from . import calculator
