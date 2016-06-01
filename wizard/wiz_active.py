@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+from openerp import api, models
+
 
 class wiz_show_active(models.TransientModel):
     _name = 'wiz.show.active'

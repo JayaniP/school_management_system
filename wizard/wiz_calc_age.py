@@ -23,7 +23,8 @@ class wiz_calc_age(models.TransientModel):
             sdata = stud_obj.search([('fname', 'ilike', res.fname)])
             for i in sdata:
                 if i.bdate:
-                    age = (dtime.now() - dtime.strptime(i.bdate, "%Y-%m-%d")).days/365
+                    age = (dtime.now() -
+                           dtime.strptime(i.bdate, "%Y-%m-%d")).days/365
                     i.age = age
 
     @api.multi

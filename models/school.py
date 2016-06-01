@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp import api , fields, models
-from openerp.exceptions import except_orm, ValidationError
+from openerp import api, fields, models
+from openerp.exceptions import ValidationError
 from datetime import datetime as dtime
-from openerp import tools
 from openerp.tools.translate import _
-from openerp.osv import osv
 import re
 import time
 
@@ -17,8 +15,8 @@ class admission(models.Model):
     @api.depends('bdate')
     def calc_age(self):
         if self.bdate:
-            age = (dtime.now()- dtime.strptime 
-                  (self.bdate, "%Y-%m-%d")).days/365
+            age = (dtime.now() -
+                   dtime.strptime(self.bdate, "%Y-%m-%d")).days / 365
             self.age = age
 
     name = fields.Char('Student Reference', required=False, copy=False,
@@ -42,16 +40,19 @@ class admission(models.Model):
                           default=time.strftime("%Y-%m-%d"))
     admissiondate = fields.Date('Admission Date')
     std = fields.Selection([('f', '1st Std'), ('s', '2th Std'),
-            ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'),
-            ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'),
-            ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'),
-            ('twe', '12th Std')], 'Standard')
+                            ('t', '3th Std'), ('fo', '4th Std'),
+                            ('fi', '5th Std'), ('six', '6th Std'),
+                            ('se', '7th Std'), ('e', '8th Std'),
+                            ('n', '9th Std'), ('ten', '10th Std'),
+                            ('ele', '11th Std'), ('twe', '12th Std')],
+                           'Standard')
     street = fields.Text("Address")
     city = fields.Selection([('p', 'Patan'), ('a', 'Ahmedabad'),
-            ('b', 'Baroda'), ('s', 'Surat'), ('r', 'Rajkot'),
-            ('m', 'Mahesana'), ('g', 'Gandhinagar'), ('mb', 'Mumbai'),
-            ('bn', 'Banglore'), ('pu', 'Pune'), ('d', 'Delhi'),
-            ('my', 'Mysoor')], 'City')
+                            ('b', 'Baroda'), ('s', 'Surat'),
+                            ('r', 'Rajkot'), ('m', 'Mahesana'),
+                            ('g', 'Gandhinagar'), ('mb', 'Mumbai'),
+                            ('bn', 'Banglore'), ('pu', 'Pune'),
+                            ('d', 'Delhi'), ('my', 'Mysoor')], 'City')
     country = fields.Many2one('res.country', 'Country')
     country_code = fields.Char('Country Code', related='country.code')
     # Related fields are not created in database same as compute / function
@@ -64,18 +65,20 @@ class admission(models.Model):
     year = fields.Selection([('fb', '2016'), ('sb', '2017'), ('tb', '2018'),
                              ('fb', '2019'), ('fib', '2020')], 'Year')
     status = fields.Selection([('details', 'Details'), ('started', 'Started'),
-         ('progress', 'In progress'), ('finished', 'Done')], default='details')
+                               ('progress', 'In progress'),
+                               ('finished', 'Done')], default='details')
 
     sql_constraints = [('number_uniq', 'unique(contact)',
-            'Contact number must be unique per Student!'),
-            ('email_uniq', 'unique(email)',
-             'Email must be unique per Student!')]
+                        'Contact number must be unique per Student!'),
+                       ('email_uniq', 'unique(email)',
+                        'Email must be unique per Student!')]
 
     @api.constrains('email', 'age', 'contact', 'bdate')
     def check_data(self):
         for res in self:
-            if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",
-                     res.email) == None:
+            if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\."
+                        "([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$",
+                        res.email) is None:
                 raise ValidationError(_('Enter valid email'))
             if len(str(res.contact)) < 10:
                 raise ValidationError(_('Enter valid contact'))
@@ -109,7 +112,7 @@ class admission(models.Model):
         })
 
     @api.multi
-    #def name_get(self, cr, uid, ids, context=None)
+#   def name_get(self, cr, uid, ids, context=None)
     def name_get(self):
         lst = []
         for student in self:
@@ -120,7 +123,7 @@ class admission(models.Model):
         return lst
 
     @api.model
-    #def name_search(self, cr, uid, name, args=None, operator='ilike',
+#   def name_search(self, cr, uid, name, args=None, operator='ilike',
 #                   context=None, limit=100):
     def name_search(self, name, args=None, operator='ilike', limit=100):
         if name:
@@ -129,7 +132,8 @@ class admission(models.Model):
                 students = self.search(args + [('lname', 'ilike', name)])
             return students.name_get()
         return super(admission, self).name_search(name, args=args,
-                                operator=operator, limit=limit)
+                                                  operator=operator,
+                                                  limit=limit)
 
     @api.onchange('state')
     def change_state(self):
@@ -137,7 +141,8 @@ class admission(models.Model):
         This will fill the country from selected state.
         """
         state = self.state
-        self.country = state and state.country_id and state.country_id.id or False
+        self.country = state and state.country_id and state.country_id.id\
+            or False
 #        if state and state.country_id:
 #            # Fill country from selected state
 #            self.country = state.country_id.id
@@ -146,7 +151,7 @@ class admission(models.Model):
 
 #    def create(self, cr, uid, vals, context=None):
 #        return super(admission, self).create(cr, uid, vals)
-#v8
+#   v8
     @api.multi
     def create_data(self, vals):
         for res in self:
@@ -166,14 +171,14 @@ class admission(models.Model):
     @api.multi
     def search_data(self):
         for res in self:
-            sdata = res.search([('lname', 'ilike', 'patel')])
+            res.search([('lname', 'ilike', 'patel')])
 
     @api.multi
     def read_data(self):
         for res in self:
-            rdata = res.read(['fname', 'lname', 'mname', 'contact', 'email'])
+            res.read(['fname', 'lname', 'mname', 'contact', 'email'])
 
-#v7
+#    v7
 #    @api.v7
 #    def write(self, cr, uid, ids, vals, context=None):
 #       searchid = self.search(cr, uid, [('fname','ilike','jayani')],
@@ -226,10 +231,10 @@ class school_event(models.Model):
     _name = "school.event"
 
     evname = fields.Selection([('p', 'Painintg'), ('d', 'Drama'),
-                ('s', 'Singing'), ('da', 'Dancing'), ('q', 'Quiz'),
-                ('so', 'Solo')], 'Event Name')
+                               ('s', 'Singing'), ('da', 'Dancing'),
+                               ('q', 'Quiz'), ('so', 'Solo')], 'Event Name')
     org = fields.Many2many('school.admission', 'student_event_rel', 'event_id',
-                    'student_id', 'Students')
+                           'student_id', 'Students')
 
     @api.multi
     def write(self, vals):
@@ -251,9 +256,11 @@ class faculty(models.Model):
     bdate = fields.Date("BirthDate")
     street = fields.Text("Address")
     city = fields.Selection([('p', 'Patan'), ('a', 'Ahmedabad'),
-            ('b', 'Baroda'), ('s', 'Surat'), ('r', 'Rajkot'),
-            ('m', 'Mahesana'), ('g', 'Gandhinagar'), ('mb', 'Mumbai'),
-        ('bn', 'Banglore'), ('pu', 'Pune'), ('d', 'Delhi'), ('my', 'Mysoor')])
+                             ('b', 'Baroda'), ('s', 'Surat'),
+                             ('r', 'Rajkot'), ('m', 'Mahesana'),
+                             ('g', 'Gandhinagar'), ('mb', 'Mumbai'),
+                             ('bn', 'Banglore'), ('pu', 'Pune'),
+                             ('d', 'Delhi'), ('my', 'Mysoor')])
     country = fields.Many2one('res.country', 'Country')
     country_code = fields.Char('Country Code', related='country.code')
     state = fields.Many2one('res.country.state', 'State')
@@ -277,7 +284,8 @@ class faculty(models.Model):
                 f = self.search(args + [('lname', 'ilike', name)])
             return f.name_get()
         return super(faculty, self).name_search(name, args=args,
-                        operator=operator, limit=limit)
+                                                operator=operator,
+                                                limit=limit)
 
     @api.model
     def create(self, vals):
@@ -310,11 +318,15 @@ class library(models.Model):
     _name = "school.library"
 
     bname = fields.Selection([('a', 'MathsPuzzles'), ('d', 'EnglishGrammer'),
-     ('e', 'EnglishVocabulary'), ('g', 'GeneralKnowledge'), ('m', 'Magazine'),
-        ('sc', 'Science')], 'Book Name')
+                              ('e', 'EnglishVocabulary'),
+                              ('g', 'GeneralKnowledge'),
+                              ('m', 'Magazine'),
+                              ('sc', 'Science')], 'Book Name')
     bauthor = fields.Selection([('a', 'AshokPatel'), ('sc', 'ShaileshGajjar'),
-        ('e', 'ChimnalalMunshi'), ('d', 'Dr.Chatrvedi'), ('m', 'Manan Vyas'),
-        ('g', 'Praafful Vyas')], 'Book Auther')
+                                ('e', 'ChimnalalMunshi'),
+                                ('d', 'Dr.Chatrvedi'),
+                                ('m', 'Manan Vyas'),
+                                ('g', 'Praafful Vyas')], 'Book Auther')
     idate = fields.Date('Issue Date')
     rdate = fields.Date('Return Date')
     des = fields.Text('Book Description')
@@ -370,15 +382,17 @@ class assignment(models.Model):
     _order = 'subject desc'
 
     subject = fields.Selection([('m', 'Maths'), ('e', 'English'),
-         ('s', 'Science'), ('p', 'Physics'), ('c', 'Chemistry'),
-         ('b', 'Biology'), ('sc', 'SocialScience')])
+                                ('s', 'Science'), ('p', 'Physics'),
+                                ('c', 'Chemistry'), ('b', 'Biology'),
+                                ('sc', 'SocialScience')])
     std = fields.Selection([('f', '1st Std'), ('s', '2th Std'),
-        ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'),
-        ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'),
-        ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'),
-        ('twe', '12th Std')])
+                            ('t', '3th Std'), ('fo', '4th Std'),
+                            ('fi', '5th Std'), ('six', '6th Std'),
+                            ('se', '7th Std'), ('e', '8th Std'),
+                            ('n', '9th Std'), ('ten', '10th Std'),
+                            ('ele', '11th Std'), ('twe', '12th Std')])
     div = fields.Selection([('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'),
-                             ('e', 'E')])
+                            ('e', 'E')])
     assign = fields.Many2many('school.admission', 'assignment_student_rel',
                               'assignment_id', 'student_id', 'Assignment')
     idate = fields.Date("Issue Date",)
@@ -394,7 +408,7 @@ class assignment(models.Model):
     def check_dates(self):
         if self.idate >= self.rdate:
             raise ValidationError(_('Issue Date Should be less than'
-                        'the Return Date!'))
+                                    'the Return Date!'))
 
 
 class result(models.Model):
@@ -405,12 +419,14 @@ class result(models.Model):
                             ('e', 'E')])
     ename = fields.Selection([('i', 'Internal'), ('e', 'External')])
     std = fields.Selection([('f', '1st Std'), ('s', '2th Std'),
-        ('t', '3th Std'), ('fo', '4th Std'), ('fi', '5th Std'),
-        ('six', '6th Std'), ('se', '7th Std'), ('e', '8th Std'),
-        ('n', '9th Std'), ('ten', '10th Std'), ('ele', '11th Std'),
-        ('twe', '12th Std')])
+                            ('t', '3th Std'), ('fo', '4th Std'),
+                            ('fi', '5th Std'), ('six', '6th Std'),
+                            ('se', '7th Std'), ('e', '8th Std'),
+                            ('n', '9th Std'), ('ten', '10th Std'),
+                            ('ele', '11th Std'),
+                            ('twe', '12th Std')])
     year = fields.Selection([('fb', '2016'), ('sb', '2017'), ('tb', '2018'),
-        ('fb', '2019'), ('fib', '2020')])
+                             ('fb', '2019'), ('fib', '2020')])
     totalmarks = fields.Integer('Total Marks')
     obtainmarks = fields.Integer('obtain Marks')
     percentage = fields.Integer('Percentage')
@@ -419,18 +435,18 @@ class result(models.Model):
     _sql_constraints = [('c_obtainmarks', 'CHECK (obtainmarks<totalmarks)',
                          'Obtain marks is not more than Total marks')]
 
-    #v7
-#    def calc_res(self, cr, uid, ids, context=None):
-#        for res in self.browse(cr, uid, ids, context=context):
-#            per = res.obtainmarks * 100 / res.totalmarks
-#            result =''
-#            if per >= 35:
+#   v7
+#   def calc_res(self, cr, uid, ids, context=None):
+#       for res in self.browse(cr, uid, ids, context=context):
+#           per = res.obtainmarks * 100 / res.totalmarks
+#           result =''
+#           if per >= 35:
 #               result = 'Pass'
-#            else:
+#           else:
 #               result = 'Fail'
-#            self.write(cr,uid,[res.id],{'percentage': per, 'res': result},
-#                                   context=context)
-    #v8
+#           self.write(cr,uid,[res.id],{'percentage': per, 'res': result},
+#                      context=context)
+#   v8
     @api.multi
     def calc_res(self):
         for res in self:
@@ -447,9 +463,6 @@ class result(models.Model):
         for res in self:
             res.unlink()
         return True
-#class school_school(models.Model):
-#    _name="school.school"
-#    _table="school"
 
 
 class school_result(models.Model):
@@ -460,18 +473,28 @@ class school_result(models.Model):
 class project(models.Model):
     _name = "school.project"
 
-#    _inherits = {
+#   _inherits = {
 #                 'school.assignment':"faculty_id"
 #                 'account.analytic.account': "analytic_account_id",
-#                }
+#               }
 
     faculty_id = fields.Many2one('school.faculty', 'Faculty Name',
-                    required=True, delegate=True)
+                                 required=True, delegate=True)
     id = fields.Integer("EnterID")
     analytic_account_id = fields.Many2one('project.project',
-            'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects."
-                 "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
-            ondelete="cascade", auto_join=True, delegate=True)
+                                          'Contract/Analytic',
+                                          help="Link this project to,"
+                                          "an analytic account"
+                                          "if you need financial,"
+                                          " management on projects."
+                                          "It enables you to connect,"
+                                          "projects with budgets,"
+                                          "planning, cost and,"
+                                          "revenue analysis,"
+                                          "timesheets on,"
+                                          "projects, etc.",
+                                          ondelete="cascade",
+                                          auto_join=True, delegate=True)
 
 #    def schedule_tasks(self, cr, uid, ids, context=None):
 #        task= super(project,self).schedule_tasks(self, cr, uid, ids,

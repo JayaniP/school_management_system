@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import api ,fields ,models
+from openerp import api, fields, models
+
 
 class cal(models.Model):
     _name = "calculator.cal"
@@ -18,5 +19,4 @@ class cal(models.Model):
 
     @api.multi
     def calc_res(self):
-        r = self._context.get('value')
-
+        self._context.get('value')

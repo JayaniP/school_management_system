@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+from openerp import models
 from openerp.report import report_sxw
+
 
 class report_parser(report_sxw.rml_parse):
 
